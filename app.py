@@ -99,7 +99,7 @@ with st.spinner("Menginisialisasi Mesin AI (Swin Transformer, ST-GAT, CatBoost).
 # ==========================================
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/1892/1892751.png", width=100) # Placeholder logo
-    st.title("🌾 TISIIF 2026")
+    st.title("TISIIF 2026")
     st.caption("Agricultural AI Framework by Sriwijaya University")
     st.markdown("---")
     st.markdown("**Didukung oleh:**")
@@ -110,10 +110,10 @@ with st.sidebar:
 # ==========================================
 # KONTEN UTAMA (SISTEM TAB)
 # ==========================================
-st.markdown('<p class="main-header">🌾 WheatBlast Early Warning Radar</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-header">WheatBlast Early Warning Radar</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">Sistem Deteksi Epidemik & Prediksi Ekonomi Panen Gandum Berbasis Multi-AI</p>', unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["🔍 Radar Scanner", "📖 Ensiklopedia Penyakit", "ℹ️ Petunjuk Penggunaan"])
+tab1, tab2, tab3 = st.tabs(["Radar Scanner", "Ensiklopedia Penyakit", "Petunjuk Penggunaan"])
 
 # ------------------------------------------
 # TAB 1: RADAR SCANNER (APLIKASI UTAMA)
@@ -157,9 +157,9 @@ with tab1:
             diagnosis = class_names[pred_idx].upper().replace('_', ' ')
             
             if diagnosis == "HEALTHY WHEAT":
-                st.success(f"✅ **Hasil Diagnosa: {diagnosis}**")
+                st.success(f"**Hasil Diagnosa: {diagnosis}**")
             else:
-                st.error(f"⚠️ **Hasil Diagnosa: terinfeksi {diagnosis}**")
+                st.error(f"**Hasil Diagnosa: terinfeksi {diagnosis}**")
                 
             with st.expander("Lihat Detail Probabilitas AI"):
                 for idx, name in enumerate(class_names):
@@ -190,7 +190,7 @@ with tab1:
         st.subheader("3. Proyeksi Panen (Expert System)")
         
         # Menggunakan Expander agar tidak memenuhi layar HP
-        with st.expander("⚙️ Atur Parameter Lingkungan & Perawatan", expanded=True):
+        with st.expander("Atur Parameter Lingkungan & Perawatan", expanded=True):
             temp_input = st.slider("Suhu Harian (°C)", 10.0, 40.0, 25.0)
             rainfall_input = st.slider("Curah Hujan (mm)", 0.0, 300.0, 150.0)
             fertilizer_type = st.selectbox("Jenis Pupuk", ["Chemical", "Organic", "Mixed"])
@@ -257,10 +257,10 @@ with tab1:
 # TAB 2: ENSIKLOPEDIA PENYAKIT
 # ------------------------------------------
 with tab2:
-    st.header("📖 Ensiklopedia Patogen Gandum")
+    st.header("Ensiklopedia Patogen Gandum")
     st.write("Kenali berbagai jenis ancaman patogen yang dapat menghancurkan hasil panen gandum Anda.")
     
-    with st.expander("🌾 Wheat Blast (Magnaporthe oryzae pathotype Triticum)", expanded=True):
+    with st.expander("Wheat Blast (Magnaporthe oryzae pathotype Triticum)", expanded=True):
         st.error("**Tingkat Bahaya: SANGAT TINGGI (Karantina)**")
         st.write("""
         **Deskripsi:** Penyakit jamur mematikan yang menyebar cepat, menyerang bulir gandum dan menyebabkan pemutihan parsial atau total.
@@ -268,19 +268,19 @@ with tab2:
         **Mitigasi:** Penggunaan fungisida triazole, rotasi tanaman, dan pemusnahan sisa panen yang terinfeksi.
         """)
         
-    with st.expander("🍂 Leaf Rust (Puccinia triticina)"):
+    with st.expander("Leaf Rust (Puccinia triticina)"):
         st.warning("**Tingkat Bahaya: SEDANG - TINGGI**")
         st.write("""
         **Deskripsi:** Dikenal sebagai 'karat daun', merupakan penyakit gandum yang paling tersebar luas di dunia.
-        **Gejala Visual:** Pustula kecil berbentuk oval berwarna oranye hingga cokelat karat pada permukaan daun. 
+        **Gejala Visual:** Pustula kecil berbentuk oval berwarna oranye hingga cokelat karat pada permukaan daun.  \n
         **Mitigasi:** Penggunaan varietas gandum tahan karat, penyemprotan fungisida preventif saat kelembapan tinggi.
         """)
         
-    with st.expander("🪵 Stem Rust (Puccinia graminis)"):
+    with st.expander("Stem Rust (Puccinia graminis)"):
         st.warning("**Tingkat Bahaya: TINGGI**")
         st.write("""
         **Deskripsi:** Patogen perusak batang yang dapat menyebabkan tanaman gandum rebah (patah) sebelum panen.
-        **Gejala Visual:** Pustula merah bata memanjang yang menembus epidermis batang dan seludang daun.
+        **Gejala Visual:** Pustula merah bata memanjang yang menembus epidermis batang dan seludang daun. \n
         **Mitigasi:** Pemantauan spora terbawa angin, eradikasi inang alternatif (seperti tanaman *barberry*).
         """)
 
@@ -288,7 +288,7 @@ with tab2:
 # TAB 3: PETUNJUK PENGGUNAAN
 # ------------------------------------------
 with tab3:
-    st.header("ℹ️ Cara Kerja Sistem 4-AI")
+    st.header("Cara Kerja Sistem 4-AI")
     st.markdown("""
     Aplikasi ini merangkai 4 Kecerdasan Buatan berbeda dalam satu jalur pipa (*pipeline*) terintegrasi:
     
