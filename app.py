@@ -21,7 +21,7 @@ st.set_page_config(page_title="WheatBlast Radar", page_icon="🌾", layout="wide
 st.markdown("""
 <style>
     .main-header {font-size: 10rem; font-weight: 750; color: #1E3A8A; margin-bottom: 0;}
-    .sub-header {font-size: 5rem; color: #4B5563; margin-bottom: 2rem;}
+    .sub-header {font-size: 2rem; color: #4B5563; margin-bottom: 2rem;}
     .metric-card {background-color: #F3F4F6; padding: 15px; border-radius: 10px; border-left: 5px solid #3B82F6;}
 </style>
 """, unsafe_allow_html=True)
