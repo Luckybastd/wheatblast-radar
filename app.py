@@ -226,7 +226,7 @@ with tab1:
         st.subheader("4. Sintesis Pakar Agronomi (LLM)")
         st.caption("AI akan menganalisis ketiga data di atas dan memberikan instruksi tindakan mitigasi tingkat ahli.")
         
-        if st.button("Generate Laporan Pakar (Groq API)"):
+        if st.button("Generate Laporan Pakar"):
             prompt_llm = f"""
             Anda adalah seorang konsultan agrikultur senior dari FAO. Buat laporan singkat (maksimal 3 kalimat) dalam BAHASA INGGRIS berdasarkan data AI berikut:
             - Status Daun (Computer Vision): {visual_report_string}
