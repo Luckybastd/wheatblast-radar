@@ -1,0 +1,2 @@
+*.pth filter=lfs diff=lfs merge=lfs -text
+saved_models/ai1_best_swin.pth filter=lfs diff=lfs merge=lfs -text
