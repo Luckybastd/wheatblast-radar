@@ -157,15 +157,23 @@ with col_right:
         """
         
         try:
-            # Mengambil rahasia API Key dari Streamlit Secrets
-            client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+            # Pengecekan spesifik untuk memastikan Secret terbaca
+            api_key = st.secrets["GROQ_API_KEY"]
+            client = Groq(api_key=api_key)
+            
             with st.spinner("Connecting to Llama-3 Cloud Brain..."):
                 chat_completion = client.chat.completions.create(
                     messages=[{"role": "user", "content": prompt_llm}],
-                    model="llama3-8b-8192", # Ini adalah model Llama-3 gratis di Cloud
+                    model="llama3-8b-8192", 
                     temperature=0.3
                 )
             report_text = chat_completion.choices[0].message.content
             st.info(report_text)
+            
+        except KeyError:
+            # Jika benar-benar Streamlit belum membaca API Key
+            st.error("Kunci API belum terbaca oleh sistem. Streamlit membutuhkan waktu sekitar 1-2 menit untuk memproses Secrets baru. Silakan Refresh (F5) halaman web Anda.")
+            
         except Exception as e:
-            st.error("Please configure GROQ_API_KEY in Streamlit Secrets.")
+            # Menampilkan ERROR ASLI dari server Groq
+            st.error(f"Kunci API terbaca, tetapi terjadi kesalahan koneksi/model: {str(e)}")
