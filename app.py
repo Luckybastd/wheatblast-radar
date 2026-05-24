@@ -264,7 +264,7 @@ with tab2:
         st.error("**Tingkat Bahaya: SANGAT TINGGI (Karantina)**")
         st.write("""
         **Deskripsi:** Penyakit jamur mematikan yang menyebar cepat, menyerang bulir gandum dan menyebabkan pemutihan parsial atau total.
-        **Gejala Visual:** Bulir menjadi putih dan kering sebagian, bercak abu-abu pada daun dengan tepi cokelat gelap.
+        **Gejala Visual:** Bulir menjadi putih dan kering sebagian, bercak abu-abu pada daun dengan tepi cokelat gelap. \n
         **Mitigasi:** Penggunaan fungisida triazole, rotasi tanaman, dan pemusnahan sisa panen yang terinfeksi.
         """)
         
@@ -272,7 +272,7 @@ with tab2:
         st.warning("**Tingkat Bahaya: SEDANG - TINGGI**")
         st.write("""
         **Deskripsi:** Dikenal sebagai 'karat daun', merupakan penyakit gandum yang paling tersebar luas di dunia.
-        **Gejala Visual:** Pustula kecil berbentuk oval berwarna oranye hingga cokelat karat pada permukaan daun.
+        **Gejala Visual:** Pustula kecil berbentuk oval berwarna oranye hingga cokelat karat pada permukaan daun. 
         **Mitigasi:** Penggunaan varietas gandum tahan karat, penyemprotan fungisida preventif saat kelembapan tinggi.
         """)
         
