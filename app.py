@@ -110,8 +110,8 @@ with st.sidebar:
 # ==========================================
 # KONTEN UTAMA (SISTEM TAB)
 # ==========================================
-st.markdown('<class="main-header">WheatBlast Early Warning Radar</>', unsafe_allow_html=True)
-st.markdown('<class="sub-header">Sistem Deteksi Epidemik & Prediksi Ekonomi Panen Gandum Berbasis Multi-AI</>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">WheatBlast Early Warning Radar</h1>', unsafe_allow_html=True)
+st.markdown('<h2 class="sub-header">Sistem Deteksi Epidemik & Prediksi Ekonomi Panen Gandum Berbasis Multi-AI</h2>', unsafe_allow_html=True)
 
 tab1, tab2, tab3 = st.tabs(["Radar Scanner", "Ensiklopedia Penyakit", "Petunjuk Penggunaan"])
 
