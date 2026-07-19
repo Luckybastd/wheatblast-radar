@@ -98,6 +98,13 @@ with st.spinner("Initializing AWARE Engine (Multi-AI Framework)..."):
 # SIDEBAR
 # ==========================================
 with st.sidebar:
+    # AWARE Logo Placeholder (Currently UNSRI Logo)
+    st.markdown("""
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png" width="120">
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.title("AWARE System")
     st.caption("Agricultural Wheat AI Radar & Epidemiology")
     
@@ -114,16 +121,6 @@ with st.sidebar:
     <div style="background-color: #FEF2F2; padding: 15px; border-radius: 8px; border-left: 5px solid #DC2626; margin-bottom: 20px;">
         <p style="font-weight: 700; font-size: 0.85rem; color: #B91C1C; margin-bottom: 5px; text-transform: uppercase;">AGRICULTURAL DISCLAIMER</p>
         <p style="font-size: 0.9rem; color: #991B1B; margin-bottom: 0;">This system is not a substitute for a certified agronomist. It serves only as a reference and initial detection tool. If in doubt, always consult the nearest agricultural authority.</p>
-    </div>
-    
-    <hr style="margin: 20px 0; border-color: #E5E7EB;">
-    <p style="text-align: center; font-size: 0.9rem; color: #6B7280; margin-bottom: 15px;">Developed by students of:</p>
-    """, unsafe_allow_html=True)
-    
-    # Render the UNSRI Logo using centered HTML
-    st.markdown("""
-    <div style="display: flex; justify-content: center;">
-        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png">
     </div>
     """, unsafe_allow_html=True)
 
@@ -191,7 +188,6 @@ with tab1:
 
         st.metric(label="Regional Transmission Risk", value=f"{target_area_risk * 100:.2f}%")
         
-        # 3D INTERACTIVE MAP (Single Merged Epicenter Blob)
         lat, lon = koordinat_wilayah[selected_region]
         
         if target_area_risk > 0.6:
@@ -201,7 +197,6 @@ with tab1:
         else:
             map_color = [16, 185, 129, 120] 
             
-        # Single coordinate for one massive merged area
         df_map = pd.DataFrame({"lat": [lat], "lon": [lon]})
         
         layer = pdk.Layer(
@@ -361,27 +356,27 @@ with tab2:
         </details>
     </div>
     
-    <div style="background-color: rgba(245, 158, 11, 0.3); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+    <div style="background-color: rgba(234, 88, 12, 0.15); border: 1px solid #EA580C; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details>
-            <summary style="font-weight: bold; font-size: 1.2rem; color: #FBBF24; cursor: pointer; list-style: none;">
+            <summary style="font-weight: bold; font-size: 1.2rem; color: #F97316; cursor: pointer; list-style: none;">
                 Stem Rust (Puccinia graminis) - [HIGH RISK]
             </summary>
-            <hr style="border-color: rgba(245, 158, 11, 0.15);">
-            <p style="color: #FCD34D;"><b>Pathology:</b> Destruction of stem vessels that disrupts nutrient supply and structural integrity, triggering mass pre-harvest lodging phenomena.</p>
-            <p style="color: #FCD34D;"><b>Visual Identification:</b> Linear epidermal ruptures forming brick-red diamond-shaped pustules that emit rusty aerosol spores upon mechanical vibration.</p>
-            <p style="color: #FCD34D;"><b>Mitigation Protocol:</b> Eradication of secondary host weeds (barberry) and scheduling of broad-spectrum protectant spraying according to the rainfall cycle.</p>
+            <hr style="border-color: rgba(234, 88, 12, 0.3);">
+            <p style="color: #FB923C;"><b>Pathology:</b> Destruction of stem vessels that disrupts nutrient supply and structural integrity, triggering mass pre-harvest lodging phenomena.</p>
+            <p style="color: #FB923C;"><b>Visual Identification:</b> Linear epidermal ruptures forming brick-red diamond-shaped pustules that emit rusty aerosol spores upon mechanical vibration.</p>
+            <p style="color: #FB923C;"><b>Mitigation Protocol:</b> Eradication of secondary host weeds (barberry) and scheduling of broad-spectrum protectant spraying according to the rainfall cycle.</p>
         </details>
     </div>
     
-    <div style="background-color: rgba(255, 255, 0, 0.15); border: 1px solid #3B82F6; border-radius: 10px; padding: 15px;">
+    <div style="background-color: rgba(249, 115, 22, 0.15); border: 1px solid #F97316; border-radius: 10px; padding: 15px;">
         <details>
-            <summary style="font-weight: bold; font-size: 1.2rem; color: #60A5FA; cursor: pointer; list-style: none;">
+            <summary style="font-weight: bold; font-size: 1.2rem; color: #FB923C; cursor: pointer; list-style: none;">
                 Leaf Rust (Puccinia triticina) - [MODERATE RISK]
             </summary>
-            <hr style="border-color: rgba(255, 255, 0, 0.3);">
-            <p style="color: #93C5FD;"><b>Pathology:</b> Classic leaf rust that chronically degrades cells, inhibiting the photosynthetic rate, depreciating starch accumulation, and reducing harvest mass specifications.</p>
-            <p style="color: #93C5FD;"><b>Visual Identification:</b> Asymmetrical distribution of spherical bright orange pustules, exclusively concentrated on the upper strata leaf surfaces.</p>
-            <p style="color: #93C5FD;"><b>Mitigation Protocol:</b> Gradual genetic intervention through planting transition toward rust-resistant cultivars for subsequent agricultural cycles.</p>
+            <hr style="border-color: rgba(249, 115, 22, 0.3);">
+            <p style="color: #FDBA74;"><b>Pathology:</b> Classic leaf rust that chronically degrades cells, inhibiting the photosynthetic rate, depreciating starch accumulation, and reducing harvest mass specifications.</p>
+            <p style="color: #FDBA74;"><b>Visual Identification:</b> Asymmetrical distribution of spherical bright orange pustules, exclusively concentrated on the upper strata leaf surfaces.</p>
+            <p style="color: #FDBA74;"><b>Mitigation Protocol:</b> Gradual genetic intervention through planting transition toward rust-resistant cultivars for subsequent agricultural cycles.</p>
         </details>
     </div>
     """, unsafe_allow_html=True)
@@ -402,10 +397,17 @@ with tab4:
     
     col_c1, col_c2 = st.columns(2)
     with col_c1:
-        st.subheader("Principal Investigator")
+        st.subheader("Research Team")
         st.markdown("""
-        **Jonatan**  
-        *Undergraduate Researcher, Applied Mathematics*  
+        **Advisor:** Anita Desiani, S.Si., M.Kom.  
+        **Project Lead:** Jonatan  
+        **Team Members:**  
+        - Arjun Elvas Janggiara  
+        - Slamet Prayogo  
+        - Chaya Gladys Zhafirah A.  
+        - Giska Auria  
+        - Jeni Putri Anggraini  
+        
         **Universitas Sriwijaya (UNSRI)**, Indonesia.  
         Research Focus: Implementation of Machine Learning architectures, Computer Vision algorithms, and System Dynamics for food supply chain stabilization.
         
