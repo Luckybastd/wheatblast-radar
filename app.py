@@ -15,7 +15,7 @@ import os
 import pydeck as pdk
 
 # ==========================================
-# KONFIGURASI HALAMAN & CUSTOM CSS
+# PAGE CONFIGURATION & CUSTOM CSS
 # ==========================================
 st.set_page_config(page_title="WheatBlast Radar", layout="wide", initial_sidebar_state="expanded")
 
@@ -33,7 +33,7 @@ if 'predicted_yield' not in st.session_state:
     st.session_state.predicted_yield = None
 
 # ==========================================
-# DEFINISI ARSITEKTUR & CACHING
+# ARCHITECTURE DEFINITION & CACHING
 # ==========================================
 class ST_GAT(nn.Module):
     def __init__(self, in_channels=3, hidden_channels=64):
@@ -63,12 +63,13 @@ def load_all_models():
     ai1_path = 'downloaded_models/ai1_best_swin.pth'
     ai2_path = 'downloaded_models/ai2_best_stgat.pth'
     
+    # URL HF DIRECT
     url_ai1 = "URL_HUGGING_FACE_AI1" 
     url_ai2 = "URL_HUGGING_FACE_AI2"
     
     def download_model(url, path, name):
         if not os.path.exists(path) and url.startswith("http"):
-            with st.spinner(f"Mengunduh model {name}..."):
+            with st.spinner(f"Downloading {name} model..."):
                 urllib.request.urlretrieve(url, path)
     
     download_model(url_ai1, ai1_path, "Vision AI")
@@ -90,7 +91,7 @@ def load_all_models():
     
     return model_ai1, model_ai2, model_ai3, class_names
 
-with st.spinner("Menginisialisasi Mesin AWARE (Multi-AI Framework)..."):
+with st.spinner("Initializing AWARE Engine (Multi-AI Framework)..."):
     model_ai1, model_ai2, model_ai3, class_names = load_all_models()
 
 # ==========================================
@@ -101,33 +102,33 @@ with st.sidebar:
     st.title("AWARE System")
     st.caption("Agricultural Wheat AI Radar & Epidemiology")
     st.markdown("---")
-    st.markdown("**Didukung oleh:**\n- Swin Transformer V2\n- Spatio-Temporal GAT\n- CatBoost Regressor\n- Groq Llama-3.1")
+    st.markdown("**Powered by:**\n- Swin Transformer V2\n- Spatio-Temporal GAT\n- CatBoost Regressor\n- Groq Llama-3.1")
 
 # ==========================================
-# KONTEN UTAMA
+# MAIN CONTENT
 # ==========================================
 st.markdown('<p class="main-header">AWARE Dashboard</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">System of Integrated Artificial Intelligence for Geospatial Analytics on Wheat Epidemics</p>', unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["Radar Scanner", "Ensiklopedia Penyakit", "Petunjuk Operasional", "Kemitraan Riset"])
+tab1, tab2, tab3, tab4 = st.tabs(["Radar Scanner", "Disease Encyclopedia", "Operational Guidelines", "Research Partnership"])
 
 with tab1:
     col_left, col_right = st.columns([1.1, 1.1])
 
     with col_left:
-        st.subheader("1. Pemindaian Visual (Vision AI)")
-        input_method = st.radio("Pilih Metode Input:", ["Unggah File", "Kamera"], horizontal=True)
+        st.subheader("1. Visual Scanning (Vision AI)")
+        input_method = st.radio("Select Input Method:", ["Upload File", "Camera"], horizontal=True)
         
-        uploaded_file = st.file_uploader("Pilih foto daun/bulir", type=["jpg", "png"]) if input_method == "Unggah File" else st.camera_input("Arahkan kamera")
+        uploaded_file = st.file_uploader("Upload leaf/spike photo", type=["jpg", "png"]) if input_method == "Upload File" else st.camera_input("Point camera at specimen")
         
-        prob_sakit_for_ai2 = 0.5
-        visual_report_string = "Belum ada spesimen dipindai"
-        lahan_target_risk = 0.0
-        risk_string = "Menunggu data visual"
+        disease_prob_for_ai2 = 0.5
+        visual_report_string = "No specimen scanned yet"
+        target_area_risk = 0.0
+        risk_string = "Awaiting visual data"
         
         if uploaded_file is not None:
             image = Image.open(uploaded_file).convert('RGB')
-            st.image(image, caption="Spesimen Dianalisis", use_column_width=True)
+            st.image(image, caption="Specimen Analyzed", use_column_width=True)
             
             transform_eval = transforms.Compose([
                 transforms.Resize((256, 256)),
@@ -145,46 +146,46 @@ with tab1:
             else:
                 st.error(f"Diagnosis: {diagnosis}")
                     
-            prob_sakit_for_ai2 = float(probs[0] + probs[2] + probs[3])
+            disease_prob_for_ai2 = float(probs[0] + probs[2] + probs[3])
             visual_report_string = f"{diagnosis} ({probs[pred_idx]*100:.1f}%)"
 
         st.markdown("---")
-        st.subheader("2. Radar Spasial-Temporal (Graph AI)")
+        st.subheader("2. Spatio-Temporal Radar (Graph AI)")
         
         koordinat_wilayah = {
-            "Asia Selatan (India)": [22.0, 79.0],
-            "Afrika Timur": [9.0, 39.0],
-            "Amerika Selatan": [-14.0, -51.0],
-            "Eropa Timur": [48.0, 30.0]
+            "South Asia (India)": [22.0, 79.0],
+            "East Africa": [9.0, 39.0],
+            "South America": [-14.0, -51.0],
+            "Eastern Europe": [48.0, 30.0]
         }
-        selected_region = st.selectbox("Zona Agro-Klimat:", list(koordinat_wilayah.keys()))
+        selected_region = st.selectbox("Agro-Climatic Zone:", list(koordinat_wilayah.keys()))
         
         with torch.no_grad():
             X_mock = torch.randn((150, 7, 3))
-            X_mock[0, -1, 2] = prob_sakit_for_ai2 
-            lahan_target_risk = float(model_ai2(X_mock, torch.randint(0, 150, (2, 300))).squeeze().numpy()[0])
-            risk_string = "Bahaya Ekstrem" if lahan_target_risk > 0.6 else "Risiko Sedang" if lahan_target_risk > 0.3 else "Stabil"
+            X_mock[0, -1, 2] = disease_prob_for_ai2 
+            target_area_risk = float(model_ai2(X_mock, torch.randint(0, 150, (2, 300))).squeeze().numpy()[0])
+            risk_string = "Extreme Danger" if target_area_risk > 0.6 else "Moderate Risk" if target_area_risk > 0.3 else "Stable Baseline"
 
-        st.metric(label="Risiko Penularan Regional", value=f"{lahan_target_risk * 100:.2f}%")
+        st.metric(label="Regional Transmission Risk", value=f"{target_area_risk * 100:.2f}%")
         
-        # PETA 3D INTERAKTIF (Zona Area Menyatu/Merged Blob)
+        # 3D INTERACTIVE MAP (Single Merged Epicenter Blob)
         lat, lon = koordinat_wilayah[selected_region]
         
-        # Warna dengan transparansi (100) agar saat menumpuk menjadi efek heatmap yang organik
-        if lahan_target_risk > 0.6:
-            map_color = [239, 68, 68, 100] 
-        elif lahan_target_risk > 0.3:
-            map_color = [245, 158, 11, 100] 
+        if target_area_risk > 0.6:
+            map_color = [239, 68, 68, 120] 
+        elif target_area_risk > 0.3:
+            map_color = [245, 158, 11, 120] 
         else:
-            map_color = [16, 185, 129, 100] 
+            map_color = [16, 185, 129, 120] 
             
-        df_map = pd.DataFrame({"lat": np.random.randn(20) * 1.5 + lat, "lon": np.random.randn(20) * 1.5 + lon})
+        # Single coordinate for one massive merged area
+        df_map = pd.DataFrame({"lat": [lat], "lon": [lon]})
         
         layer = pdk.Layer(
             "ScatterplotLayer",
             data=df_map,
             get_position='[lon, lat]',
-            get_radius=180000,
+            get_radius=600000, # Large unified radius
             filled=True,
             stroked=False,
             get_fill_color=map_color,
@@ -196,44 +197,44 @@ with tab1:
             map_style="dark",
             layers=[layer], 
             initial_view_state=view_state, 
-            tooltip={"text": f"Zona {risk_string}"}
+            tooltip={"text": f"Zone: {risk_string}"}
         ))
 
     with col_right:
-        st.subheader("3. Proyeksi Panen (Expert System)")
+        st.subheader("3. Yield Projection (Expert System)")
         
-        with st.expander("Parameter Iklim & Cuaca", expanded=True):
-            temp_input = st.slider("Suhu Harian (Celcius)", 10.0, 40.0, 25.0)
-            rainfall_input = st.slider("Curah Hujan Bulanan (mm)", 0.0, 500.0, 150.0)
-            humidity = st.slider("Kelembapan (%)", 0.0, 100.0, 60.0)
+        with st.expander("Climate & Weather Parameters", expanded=True):
+            temp_input = st.slider("Daily Temperature (Celsius)", 10.0, 40.0, 25.0)
+            rainfall_input = st.slider("Monthly Rainfall (mm)", 0.0, 500.0, 150.0)
+            humidity = st.slider("Humidity (%)", 0.0, 100.0, 60.0)
             c1, c2, c3 = st.columns(3)
-            solar_rad = c1.number_input("Radiasi Surya", value=548.8)
-            wind_speed = c2.number_input("Kecepatan Angin", value=9.9)
-            gdd = c3.number_input("GDD", value=1593.5)
+            solar_rad = c1.number_input("Solar Radiation", value=548.8)
+            wind_speed = c2.number_input("Wind Speed", value=9.9)
+            gdd = c3.number_input("Growing Degree Days", value=1593.5)
 
-        with st.expander("Manajemen Lahan & Tanaman"):
+        with st.expander("Land & Crop Management"):
             c1, c2 = st.columns(2)
-            fertilizer_type = c1.selectbox("Jenis Pupuk", ["Chemical", "Organic", "Mixed"])
-            pesticide_usage = c2.selectbox("Tingkat Pestisida", ["Low", "Medium", "High"])
-            irrigation = c1.number_input("Frekuensi Irigasi", value=14)
-            growth_stage = c2.selectbox("Fase Pertumbuhan", ["Tillering", "Heading", "Flowering", "Maturity"])
-            pest_tonnes = c1.number_input("Pestisida (Ton)", value=48459.0)
-            pest_ml = c2.number_input("Pestisida (ml/Ha)", value=200.0)
+            fertilizer_type = c1.selectbox("Fertilizer Type", ["Chemical", "Organic", "Mixed"])
+            pesticide_usage = c2.selectbox("Pesticide Level", ["Low", "Medium", "High"])
+            irrigation = c1.number_input("Irrigation Frequency", value=14)
+            growth_stage = c2.selectbox("Growth Stage", ["Tillering", "Heading", "Flowering", "Maturity"])
+            pest_tonnes = c1.number_input("Pesticides (Tonnes)", value=48459.0)
+            pest_ml = c2.number_input("Pesticides (ml/Ha)", value=200.0)
             
             c3, c4, c5 = st.columns(3)
             region_input = c3.selectbox("Region", ["North", "South", "East", "West"])
             season_input = c4.selectbox("Season", ["Rabi", "Kharif"])
-            year_input = c5.number_input("Tahun", value=2026)
+            year_input = c5.number_input("Year", value=2026)
 
-        with st.expander("Kondisi Tanah & Topografi"):
+        with st.expander("Soil Conditions & Topography"):
             c1, c2 = st.columns(2)
-            soil_type = c1.selectbox("Tipe Tanah", ["Loamy", "Clay", "Sandy", "Silty"])
-            ph = c2.number_input("pH Tanah", value=6.5)
-            elevation = c1.number_input("Elevasi (mdpl)", value=1565.8)
-            slope = c2.number_input("Kemiringan", value=14.9)
+            soil_type = c1.selectbox("Soil Type", ["Loamy", "Clay", "Sandy", "Silty"])
+            ph = c2.number_input("Soil pH", value=6.5)
+            elevation = c1.number_input("Elevation (masl)", value=1565.8)
+            slope = c2.number_input("Slope", value=14.9)
             
-        with st.expander("Nutrisi Makro & Mikro (Advanced)"):
-            st.caption("Biarkan nilai default jika tidak ada data laboratorium.")
+        with st.expander("Macro & Micro Nutrients (Advanced)"):
+            st.caption("Leave default values if laboratory data is unavailable.")
             c1, c2, c3, c4 = st.columns(4)
             n_val = c1.number_input("Nitrogen (N)", value=105.1)
             p_val = c2.number_input("Phosphorus (P)", value=77.8)
@@ -248,23 +249,23 @@ with tab1:
             b_val = c3.number_input("Boron (B)", value=1.5)
             mo_val = c4.number_input("Molybdenum (Mo)", value=0.5)
 
-        with st.expander("Indikator Sensor & Fisik Tanah (Advanced)"):
+        with st.expander("Sensor Indicators & Soil Physics (Advanced)"):
             c1, c2, c3, c4 = st.columns(4)
             ec = c1.number_input("Electrical Cond. (EC)", value=1.3)
             oc = c2.number_input("Organic Carbon (OC)", value=1.05)
             cec = c3.number_input("Cation Exchange (CEC)", value=27.6)
             bulk_dens = c4.number_input("Bulk Density", value=1.4)
-            sand = c1.number_input("Pasir / Sand (%)", value=49.8)
-            silt = c2.number_input("Debu / Silt (%)", value=32.3)
-            clay = c3.number_input("Liat / Clay (%)", value=22.6)
+            sand = c1.number_input("Sand (%)", value=49.8)
+            silt = c2.number_input("Silt (%)", value=32.3)
+            clay = c3.number_input("Clay (%)", value=22.6)
             whc = c4.number_input("Water Holding Cap.", value=24.9)
             ndvi = c1.number_input("Vegetation Idx (NDVI)", value=0.7)
             evi = c2.number_input("Enhanced Veg Idx (EVI)", value=0.0)
             lai = c3.number_input("Leaf Area Idx (LAI)", value=3.0)
             chloro = c4.number_input("Chlorophyll", value=30.0)
-            aspect = c1.number_input("Aspect (Topografi)", value=181.1)
+            aspect = c1.number_input("Aspect", value=181.1)
 
-        if st.button("Prediksi Tonase Panen", use_container_width=True):
+        if st.button("Predict Harvest Yield", use_container_width=True):
             input_data = {
                 'Temperature': [temp_input], 'Humidity': [humidity], 'Rainfall': [rainfall_input],
                 'Soil_Type': [soil_type], 'pH': [ph], 'EC': [ec], 'OC': [oc], 'N': [n_val], 'P': [p_val], 'K': [k_val],
@@ -285,111 +286,111 @@ with tab1:
             }
             try:
                 base_yield = model_ai3.predict(pd.DataFrame(input_data))[0]
-                penalty_factor = 1.0 - (lahan_target_risk * 0.4) 
+                penalty_factor = 1.0 - (target_area_risk * 0.4) 
                 st.session_state.predicted_yield = base_yield * penalty_factor
             except Exception:
                 st.session_state.predicted_yield = 0.0
 
         st.markdown("<br>", unsafe_allow_html=True)
         if st.session_state.predicted_yield is None:
-            st.metric(label="Prediksi Hasil Panen Akhir", value="-- Kg/Hektar", delta="Menunggu Input Data")
+            st.metric(label="Predicted Final Yield", value="-- Kg/Hectare", delta="Awaiting Data Input")
         else:
-            st.metric(label="Prediksi Hasil Panen Akhir", value=f"{st.session_state.predicted_yield:.2f} Kg/Hektar", delta="Dampak Epidemi" if prob_sakit_for_ai2 > 0.5 else "Kondisi Optimal", delta_color="inverse")
+            st.metric(label="Predicted Final Yield", value=f"{st.session_state.predicted_yield:.2f} Kg/Hectare", delta="Epidemic Impact" if disease_prob_for_ai2 > 0.5 else "Optimal Conditions", delta_color="inverse")
 
         st.markdown("---")
-        st.subheader("4. Sintesis Pakar Agronomi (LLM)")
+        st.subheader("4. Agronomy Expert Synthesis (LLM)")
         
-        if st.button("Kalkulasi Laporan Pakar (API Terenkripsi)"):
+        if st.button("Calculate Expert Report (Encrypted API)"):
             if st.session_state.predicted_yield is None:
-                st.warning("Peringatan: Harap jalankan Prediksi Tonase Panen pada Langkah 3 terlebih dahulu.")
+                st.warning("Warning: Please execute the Harvest Yield Prediction in Step 3 first.")
             else:
                 prompt_llm = f"""
-                Anda adalah konsultan agrikultur strategis. Buat laporan profesional (maks 3 kalimat) dalam BAHASA INGGRIS berdasarkan metrik AI:
-                - Deteksi Penyakit: {visual_report_string}
-                - Risiko Spasial Geografis: {risk_string} ({lahan_target_risk*100:.1f}%)
-                - Estimasi Panen: {st.session_state.predicted_yield:.1f} Kg/Ha.
-                Sertakan satu protokol mitigasi teknis.
+                You are a strategic agricultural consultant from the FAO. Write a professional report (max 3 sentences) in ENGLISH based on the following AI metrics:
+                - Disease Detection: {visual_report_string}
+                - Geographical Spatial Risk: {risk_string} ({target_area_risk*100:.1f}%)
+                - Yield Estimation: {st.session_state.predicted_yield:.1f} Kg/Ha.
+                Include one technical mitigation protocol. Do not include introductory greetings.
                 """
                 try:
                     client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-                    with st.spinner("Memproses analitik sintesis..."):
+                    with st.spinner("Processing synthesis analytics..."):
                         report_text = client.chat.completions.create(
                             messages=[{"role": "user", "content": prompt_llm}], model="llama-3.1-8b-instant", temperature=0.3
                         ).choices[0].message.content
                     st.info(report_text)
                 except Exception as e:
-                    st.error(f"Kegagalan Komunikasi Server: {str(e)}")
+                    st.error(f"Server Communication Failure: {str(e)}")
 
 with tab2:
-    st.header("Ensiklopedia Patogen Gandum")
-    st.write("Klasifikasi patologi dan protokol penanganan ancaman ekologis.")
+    st.header("Encyclopedia of Wheat Pathogens")
+    st.write("Pathology classification and ecological threat management protocols.")
     
     st.markdown("""
     <div style="background-color: rgba(220, 38, 38, 0.15); border: 1px solid #DC2626; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details open>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #EF4444; cursor: pointer; list-style: none;">
-                Wheat Blast (Magnaporthe oryzae pathotype Triticum) - [BAHAYA KARANTINA]
+                Wheat Blast (Magnaporthe oryzae pathotype Triticum) - [QUARANTINE HAZARD]
             </summary>
             <hr style="border-color: rgba(220, 38, 38, 0.3);">
-            <p style="color: #F87171;"><b>Patologi:</b> Penyakit jamur berdaya hancur ekstrem yang menyebar eksponensial. Menyerang bulir gandum dan memicu nekrosis jaringan vaskular total.</p>
-            <p style="color: #F87171;"><b>Identifikasi Visual:</b> Pemutihan bulir secara instan, diikuti pengeringan akut. Terdapat bercak elips abu-abu dengan perimeter cokelat gelap pada foliar.</p>
-            <p style="color: #F87171;"><b>Protokol Mitigasi:</b> Eradikasi biologis radius area terinfeksi, aplikasi fungisida sistemik kelas triazole secara masif, dan isolasi distribusi logistik lokal.</p>
+            <p style="color: #F87171;"><b>Pathology:</b> An extremely destructive fungal disease that spreads exponentially. It attacks wheat spikes and triggers total vascular tissue necrosis.</p>
+            <p style="color: #F87171;"><b>Visual Identification:</b> Instantaneous spike bleaching, followed by acute desiccation. Presence of gray elliptical lesions with dark brown margins on the foliage.</p>
+            <p style="color: #F87171;"><b>Mitigation Protocol:</b> Biological eradication of the infected radius, massive application of systemic triazole-class fungicides, and isolation of local logistics distribution.</p>
         </details>
     </div>
     
     <div style="background-color: rgba(245, 158, 11, 0.15); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #FBBF24; cursor: pointer; list-style: none;">
-                Stem Rust (Puccinia graminis) - [RISIKO TINGGI]
+                Stem Rust (Puccinia graminis) - [HIGH RISK]
             </summary>
             <hr style="border-color: rgba(245, 158, 11, 0.3);">
-            <p style="color: #FCD34D;"><b>Patologi:</b> Destruksi pembuluh batang yang mendisrupsi suplai nutrisi dan integritas struktural, memicu fenomena rebah batang masal pra-panen.</p>
-            <p style="color: #FCD34D;"><b>Identifikasi Visual:</b> Ruptur epidermis linier membentuk pustula merah bata yang memancarkan spora berkarat secara aerosol saat terpapar vibrasi mekanis.</p>
-            <p style="color: #FCD34D;"><b>Protokol Mitigasi:</b> Pemusnahan gulma inang sekunder (berberis) dan penjadwalan penyemprotan protektan spektrum luas sesuai siklus curah hujan.</p>
+            <p style="color: #FCD34D;"><b>Pathology:</b> Destruction of stem vessels that disrupts nutrient supply and structural integrity, triggering mass pre-harvest lodging phenomena.</p>
+            <p style="color: #FCD34D;"><b>Visual Identification:</b> Linear epidermal ruptures forming brick-red diamond-shaped pustules that emit rusty aerosol spores upon mechanical vibration.</p>
+            <p style="color: #FCD34D;"><b>Mitigation Protocol:</b> Eradication of secondary host weeds (barberry) and scheduling of broad-spectrum protectant spraying according to the rainfall cycle.</p>
         </details>
     </div>
     
     <div style="background-color: rgba(59, 130, 246, 0.15); border: 1px solid #3B82F6; border-radius: 10px; padding: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #60A5FA; cursor: pointer; list-style: none;">
-                Leaf Rust (Puccinia triticina) - [RISIKO SEDANG]
+                Leaf Rust (Puccinia triticina) - [MODERATE RISK]
             </summary>
             <hr style="border-color: rgba(59, 130, 246, 0.3);">
-            <p style="color: #93C5FD;"><b>Patologi:</b> Degradasi seluler kronis pada daun yang menghambat laju fotosintesis, mendepresiasi akumulasi pati dan menurunkan spesifikasi massa panen.</p>
-            <p style="color: #93C5FD;"><b>Identifikasi Visual:</b> Distribusi asimetris pustula sferis berwarna oranye terang, terpusat eksklusif pada permukaan helaian daun strata atas.</p>
-            <p style="color: #93C5FD;"><b>Protokol Mitigasi:</b> Intervensi genetik bertahap melalui transisi penanaman menuju varietas tahan karat (resistant cultivar) untuk siklus agrikultur berikutnya.</p>
+            <p style="color: #93C5FD;"><b>Pathology:</b> Classic leaf rust that chronically degrades cells, inhibiting the photosynthetic rate, depreciating starch accumulation, and reducing harvest mass specifications.</p>
+            <p style="color: #93C5FD;"><b>Visual Identification:</b> Asymmetrical distribution of spherical bright orange pustules, exclusively concentrated on the upper strata leaf surfaces.</p>
+            <p style="color: #93C5FD;"><b>Mitigation Protocol:</b> Gradual genetic intervention through planting transition toward rust-resistant cultivars for subsequent agricultural cycles.</p>
         </details>
     </div>
     """, unsafe_allow_html=True)
 
 with tab3:
-    st.header("Arsitektur Integrasi Sistem AWARE")
+    st.header("AWARE System Integration Architecture")
     st.markdown("""
-    Sistem operasional ini memvalidasi ancaman biologis melalui empat matriks kecerdasan buatan:
-    1. **Edge-Vision AI:** Eksekusi klasifikasi patogen mikroskopis pada spesimen lokal berdasarkan geometri sel.
-    2. **GNN Spasial:** Simulasi penyebaran spora lintas wilayah berdasarkan analisis topologi jaringan spasial.
-    3. **Expert Modeler:** Kuantifikasi regresi dampak klinis terhadap defisit tonase agrikultur komersial.
-    4. **Generative NLP:** Sintesis metrik teknis menjadi protokol instruksional strategis.
+    This operational system validates biological threats through four artificial intelligence matrices:
+    1. **Edge-Vision AI:** Execution of microscopic pathogen classification on local specimens based on cell geometry.
+    2. **Spatial GNN:** Simulation of spore dissemination across territories based on spatial network topology analysis.
+    3. **Expert Modeler:** Regression quantification of clinical impact on commercial agricultural tonnage deficits.
+    4. **Generative NLP:** Synthesis of technical metrics into strategic instructional protocols.
     """)
 
 with tab4:
-    st.header("Jaringan Kemitraan Inovasi & Riset Global")
-    st.markdown("Arsitektur proyek **AWARE** didesain dengan protokol *Open-Architecture* untuk memfasilitasi integrasi riset bersama institusi agrikultur dan pemangku kebijakan ketahanan pangan internasional.")
+    st.header("Global Innovation & Research Partnership Network")
+    st.markdown("The **AWARE** project architecture is designed with an Open-Architecture protocol to facilitate collaborative research integration with global agricultural institutions and food security policymakers.")
     
     col_c1, col_c2 = st.columns(2)
     with col_c1:
-        st.subheader("Pimpinan Peneliti")
+        st.subheader("Principal Investigator")
         st.markdown("""
         **Jonatan**  
         *Undergraduate Researcher, Applied Mathematics*  
         **Universitas Sriwijaya (UNSRI)**, Indonesia.  
-        Fokus Investigasi: Penerapan arsitektur *Machine Learning*, algoritmik *Computer Vision*, dan *System Dynamics* untuk stabilisasi rantai pangan.
+        Research Focus: Implementation of Machine Learning architectures, Computer Vision algorithms, and System Dynamics for food supply chain stabilization.
         
-        Korespodensi Manajerial: partnership@aware-unsri.edu.id
+        Managerial Correspondence: partnership@aware-unsri.edu.id
         """)
     with col_c2:
-        st.subheader("Integrasi Basis Data Institusional")
-        st.markdown("Kalibrasi model prediktif divalidasi silang menggunakan aliran data sumber terbuka dari otoritas agrikultur berikut:")
+        st.subheader("Institutional Database Integration")
+        st.markdown("Predictive model calibration is cross-validated using open-source data streams from the following agricultural authorities:")
         st.markdown("""
         - [CIMMYT (International Maize and Wheat Improvement Center)](https://www.cimmyt.org/)
         - [FAO Global Wheat Rust Monitoring System](https://rusttracker.cimmyt.org/)
