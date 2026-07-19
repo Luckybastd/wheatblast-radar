@@ -361,12 +361,12 @@ with tab2:
         </details>
     </div>
     
-    <div style="background-color: rgba(245, 158, 11, 0.15); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+    <div style="background-color: rgba(255, 255, 0, 0.15); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #FBBF24; cursor: pointer; list-style: none;">
                 Stem Rust (Puccinia graminis) - [HIGH RISK]
             </summary>
-            <hr style="border-color: rgba(245, 158, 11, 0.3);">
+            <hr style="border-color: rgba(255, 255, 0, 0.3);">
             <p style="color: #FCD34D;"><b>Pathology:</b> Destruction of stem vessels that disrupts nutrient supply and structural integrity, triggering mass pre-harvest lodging phenomena.</p>
             <p style="color: #FCD34D;"><b>Visual Identification:</b> Linear epidermal ruptures forming brick-red diamond-shaped pustules that emit rusty aerosol spores upon mechanical vibration.</p>
             <p style="color: #FCD34D;"><b>Mitigation Protocol:</b> Eradication of secondary host weeds (barberry) and scheduling of broad-spectrum protectant spraying according to the rainfall cycle.</p>
