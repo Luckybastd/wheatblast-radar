@@ -98,11 +98,34 @@ with st.spinner("Initializing AWARE Engine (Multi-AI Framework)..."):
 # SIDEBAR
 # ==========================================
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/1892/1892751.png", width=100)
     st.title("AWARE System")
     st.caption("Agricultural Wheat AI Radar & Epidemiology")
-    st.markdown("---")
-    st.markdown("**Powered by:**\n- Swin Transformer V2\n- Spatio-Temporal GAT\n- CatBoost Regressor\n- Groq Llama-3.1")
+    
+    # HTML/CSS Custom Card for Purpose & Architecture
+    st.markdown("""
+    <div style="background-color: #FFFFFF; padding: 15px; border-radius: 8px; border: 1px solid #E5E7EB; margin-bottom: 15px; margin-top: 15px;">
+        <p style="font-weight: 600; margin-bottom: 5px; color: #1F2937; font-size: 1rem;">Purpose:</p>
+        <p style="font-size: 0.9rem; color: #4B5563; margin-bottom: 10px;">Helping the agricultural sector detect early wheat epidemic threats and project economic yield through the lens of Artificial Intelligence.</p>
+        <hr style="margin: 10px 0; border-color: #E5E7EB;">
+        <p style="font-weight: 600; margin-bottom: 5px; color: #1F2937; font-size: 1rem;">Architecture:</p>
+        <p style="font-size: 0.9rem; color: #4B5563; margin-bottom: 0;">Swin-V2 + ST-GAT + CatBoost + Llama-3.1</p>
+    </div>
+    
+    <div style="background-color: #FEF2F2; padding: 15px; border-radius: 8px; border-left: 5px solid #DC2626; margin-bottom: 20px;">
+        <p style="font-weight: 700; font-size: 0.85rem; color: #B91C1C; margin-bottom: 5px; text-transform: uppercase;">AGRICULTURAL DISCLAIMER</p>
+        <p style="font-size: 0.9rem; color: #991B1B; margin-bottom: 0;">This system is not a substitute for a certified agronomist. It serves only as a reference and initial detection tool. If in doubt, always consult the nearest agricultural authority.</p>
+    </div>
+    
+    <hr style="margin: 20px 0; border-color: #E5E7EB;">
+    <p style="text-align: center; font-size: 0.9rem; color: #6B7280; margin-bottom: 15px;">Developed by students of:</p>
+    """, unsafe_allow_html=True)
+    
+    # Render the UNSRI Logo using centered HTML
+    st.markdown("""
+    <div style="display: flex; justify-content: center;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Lambang_Universitas_Sriwijaya.svg/500px-Lambang_Universitas_Sriwijaya.svg.png" width="160">
+    </div>
+    """, unsafe_allow_html=True)
 
 # ==========================================
 # MAIN CONTENT
@@ -185,7 +208,7 @@ with tab1:
             "ScatterplotLayer",
             data=df_map,
             get_position='[lon, lat]',
-            get_radius=600000, # Large unified radius
+            get_radius=600000, 
             filled=True,
             stroked=False,
             get_fill_color=map_color,
