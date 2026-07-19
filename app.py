@@ -12,12 +12,12 @@ from PIL import Image
 from groq import Groq
 import urllib.request
 import os
-import pydeck as pdk # Pustaka baru untuk Peta 3D
+import pydeck as pdk
 
 # ==========================================
 # KONFIGURASI HALAMAN & CUSTOM CSS
 # ==========================================
-st.set_page_config(page_title="WheatBlast Radar", page_icon="🌾", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="WheatBlast Radar", page_icon="W", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
 <style>
@@ -26,6 +26,8 @@ st.markdown("""
     /* Desain tombol Prediksi agar menonjol */
     .stButton>button {background-color: #2563EB; color: white; border-radius: 8px; font-weight: bold;}
     .stButton>button:hover {background-color: #1D4ED8; border-color: #1D4ED8;}
+    /* Sembunyikan atribusi dan logo peta di kanan bawah */
+    .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -34,7 +36,7 @@ if 'predicted_yield' not in st.session_state:
     st.session_state.predicted_yield = None
 
 # ==========================================
-# DEFINISI ARSITEKTUR & CACHING (TIDAK BERUBAH)
+# DEFINISI ARSITEKTUR & CACHING
 # ==========================================
 class ST_GAT(nn.Module):
     def __init__(self, in_channels=3, hidden_channels=64):
@@ -100,7 +102,7 @@ with st.spinner("Menginisialisasi Mesin AWARE (Multi-AI Framework)..."):
 # ==========================================
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/1892/1892751.png", width=100)
-    st.title("🌾 AWARE System")
+    st.title("AWARE System")
     st.caption("Agricultural Wheat AI Radar & Epidemiology")
     st.markdown("---")
     st.markdown("**Didukung oleh:**\n- Swin Transformer V2\n- Spatio-Temporal GAT\n- CatBoost Regressor\n- Groq Llama-3.1")
@@ -108,10 +110,10 @@ with st.sidebar:
 # ==========================================
 # KONTEN UTAMA (SISTEM TAB)
 # ==========================================
-st.markdown('<p class="main-header">🌾 AWARE Dashboard</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-header">AWARE Dashboard</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">System of Integrated Artificial Intelligence for Geospatial Analytics on Wheat Epidemics</p>', unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["🔍 Radar Scanner", "📖 Ensiklopedia Penyakit", "ℹ️ Petunjuk", "🤝 Kemitraan & Riset"])
+tab1, tab2, tab3, tab4 = st.tabs(["Radar Scanner", "Ensiklopedia Penyakit", "Petunjuk", "Kemitraan & Riset"])
 
 # ------------------------------------------
 # TAB 1: RADAR SCANNER
@@ -146,9 +148,9 @@ with tab1:
                 
             diagnosis = class_names[pred_idx].upper().replace('_', ' ')
             if diagnosis == "HEALTHY WHEAT":
-                st.success(f"✅ **Diagnosis: {diagnosis}**")
+                st.success(f"Diagnosis: {diagnosis}")
             else:
-                st.error(f"⚠️ **Diagnosis: {diagnosis}**")
+                st.error(f"Diagnosis: {diagnosis}")
                     
             prob_sakit_for_ai2 = float(probs[0] + probs[2] + probs[3])
             visual_report_string = f"{diagnosis} ({probs[pred_idx]*100:.1f}%)"
@@ -175,16 +177,16 @@ with tab1:
         # Tampilan Matriks Risiko
         st.metric(label="Risiko Penularan Regional", value=f"{lahan_target_risk * 100:.2f}%")
         
-        # PETA 3D INTERAKTIF (PYDECK)
+        # PETA 3D INTERAKTIF (PYDECK - LINGKARAN BOLONG)
         lat, lon = koordinat_wilayah[selected_region]
         
         # Tentukan warna peta berdasarkan tingkat risiko
         if lahan_target_risk > 0.6:
-            map_color = [239, 68, 68, 200] # Merah menyala
+            map_color = [239, 68, 68, 255] # Merah
         elif lahan_target_risk > 0.3:
-            map_color = [245, 158, 11, 200] # Oranye
+            map_color = [245, 158, 11, 255] # Oranye
         else:
-            map_color = [16, 185, 129, 200] # Hijau
+            map_color = [16, 185, 129, 255] # Hijau
             
         df_map = pd.DataFrame({"lat": np.random.randn(20) * 1.5 + lat, "lon": np.random.randn(20) * 1.5 + lon})
         
@@ -192,24 +194,33 @@ with tab1:
             "ScatterplotLayer",
             data=df_map,
             get_position='[lon, lat]',
-            get_radius=150000,
-            get_fill_color=map_color,
+            get_radius=180000,
+            filled=False,            # Lingkaran bolong
+            stroked=True,            # Garis tepi aktif
+            get_line_color=map_color,
+            line_width_min_pixels=4, # Ketebalan garis
             pickable=True
         )
         view_state = pdk.ViewState(latitude=lat, longitude=lon, zoom=3.5, pitch=30)
-        st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip={"text": f"Zona {risk_string}"}))
+        st.pydeck_chart(pdk.Deck(
+            layers=[layer], 
+            initial_view_state=view_state, 
+            tooltip={"text": f"Zona {risk_string}"},
+            map_style="mapbox://styles/mapbox/dark-v10"
+        ))
 
     with col_right:
         st.subheader("3. Proyeksi Panen (Expert System)")
         
-        with st.expander("⚙️ Atur Parameter Lingkungan (Opsional)", expanded=True):
-            temp_input = st.slider("Suhu Harian (°C)", 10.0, 40.0, 25.0)
+        with st.expander("Atur Parameter Lingkungan (Opsional)", expanded=True):
+            temp_input = st.slider("Suhu Harian (Celcius)", 10.0, 40.0, 25.0)
             rainfall_input = st.slider("Curah Hujan (mm)", 0.0, 300.0, 150.0)
             fertilizer_type = st.selectbox("Jenis Pupuk", ["Chemical", "Organic", "Mixed"])
             pesticide_usage = st.selectbox("Intensitas Pestisida", ["Low", "Medium", "High"])
 
         # Tombol Prediksi Interaktif
-        if st.button("🚀 Prediksi Tonase Panen", use_container_width=True):
+        if st.button("Prediksi Tonase Panen", use_container_width=True):
+            # Integrasi slider ke seluruh variabel dominan model
             input_data = {
                 'Temperature': [temp_input], 'Humidity': [60.0], 'Rainfall': [rainfall_input],
                 'Soil_Type': ['Loamy'], 'pH': [6.5], 'EC': [1.3], 'OC': [1.05], 'N': [105.1], 'P': [77.8], 'K': [128.9],
@@ -220,15 +231,21 @@ with tab1:
                 'Chlorophyll': [30.0], 'GDD': [1593.5], 'Crop_Type': ['Wheat'], 'Planting_Date': ['2026-01-01'],
                 'Harvest_Date': ['2026-05-01'], 'Growth_Stage': ['Maturity'], 'Irrigation_Frequency': [14],
                 'Fertilizer_Type': [fertilizer_type], 'Pesticide_Usage': [pesticide_usage], 'Region': ['North'],
-                'Season': ['Rabi'], 'Year': [2026], 'average_rain_fall_mm_per_year': [1083.0],
-                'pesticides_tonnes': [48459.04], 'avg_temp': [26.01], 'soil_pH': [6.5], 'NDVI_index': [0.7],
+                'Season': ['Rabi'], 'Year': [2026], 
+                'average_rain_fall_mm_per_year': [rainfall_input * 12], 
+                'pesticides_tonnes': [48459.04], 
+                'avg_temp': [temp_input], 
+                'soil_pH': [6.5], 'NDVI_index': [0.7],
                 'pesticide_usage_ml': [200.0], 'temperature_C': [temp_input], 'rainfall_mm': [rainfall_input],
                 'Environmental_Risk_Index': [temp_input * rainfall_input],
                 'National_Pesticide_Efficiency': [0.0001],
                 'Temp_Deviation_vs_National': [temp_input - 26.01]
             }
             try:
-                st.session_state.predicted_yield = model_ai3.predict(pd.DataFrame(input_data))[0]
+                base_yield = model_ai3.predict(pd.DataFrame(input_data))[0]
+                # Modifikasi Interaktif: Penalti Panen berdasarkan tingkat keparahan wabah
+                penalty_factor = 1.0 - (lahan_target_risk * 0.4) 
+                st.session_state.predicted_yield = base_yield * penalty_factor
             except Exception:
                 st.session_state.predicted_yield = 0.0
 
@@ -237,12 +254,12 @@ with tab1:
         if st.session_state.predicted_yield is None:
             st.metric(label="Prediksi Hasil Panen Akhir", value="-- Kg/Hektar", delta="Tunggu Input")
         else:
-            st.metric(label="Prediksi Hasil Panen Akhir", value=f"{st.session_state.predicted_yield:.2f} Kg/Hektar", delta="- Dampak Epidemi" if prob_sakit_for_ai2 > 0.5 else "Optimal", delta_color="inverse")
+            st.metric(label="Prediksi Hasil Panen Akhir", value=f"{st.session_state.predicted_yield:.2f} Kg/Hektar", delta="- Dampak Epidemi" if prob_sakit_for_ai2 > 0.5 else "Kondisi Optimal", delta_color="inverse")
 
         st.markdown("---")
         st.subheader("4. Sintesis Pakar Agronomi (LLM)")
         
-        if st.button("🤖 Generate Laporan Pakar (Groq API)"):
+        if st.button("Generate Laporan Pakar (Groq API)"):
             if st.session_state.predicted_yield is None:
                 st.warning("Harap lakukan prediksi panen terlebih dahulu pada Langkah 3.")
             else:
@@ -264,18 +281,17 @@ with tab1:
                     st.error(f"Koneksi Groq Gagal: {str(e)}")
 
 # ------------------------------------------
-# TAB 2: ENSIKLOPEDIA KUSTOM (PULL WARNA)
+# TAB 2: ENSIKLOPEDIA KUSTOM
 # ------------------------------------------
 with tab2:
-    st.header("📖 Ensiklopedia Patogen Gandum")
+    st.header("Ensiklopedia Patogen Gandum")
     st.write("Visualisasi tingkat ancaman berdasarkan klasifikasi keparahan ekologis.")
     
-    # KUSTOM HTML BOKS (Warna Utuh)
     st.markdown("""
     <div style="background-color: rgba(220, 38, 38, 0.15); border: 1px solid #DC2626; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details open>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #EF4444; cursor: pointer; list-style: none;">
-                🌾 Wheat Blast <i>(Magnaporthe oryzae pathotype Triticum)</i> — [BAHAYA KARANTINA]
+                Wheat Blast <i>(Magnaporthe oryzae pathotype Triticum)</i> - [BAHAYA KARANTINA]
             </summary>
             <hr style="border-color: rgba(220, 38, 38, 0.3);">
             <p style="color: #F87171;"><b>Deskripsi:</b> Penyakit jamur sangat mematikan yang menyebar cepat, menyerang bulir gandum dan menyebabkan pemutihan total secara eksponensial dalam hitungan hari.</p>
@@ -287,7 +303,7 @@ with tab2:
     <div style="background-color: rgba(245, 158, 11, 0.15); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #FBBF24; cursor: pointer; list-style: none;">
-                🪵 Stem Rust <i>(Puccinia graminis)</i> — [RESIKO TINGGI]
+                Stem Rust <i>(Puccinia graminis)</i> - [RESIKO TINGGI]
             </summary>
             <hr style="border-color: rgba(245, 158, 11, 0.3);">
             <p style="color: #FCD34D;"><b>Deskripsi:</b> Patogen perusak pembuluh batang yang memotong aliran nutrisi, menyebabkan tanaman rebah atau patah menjelang masa panen.</p>
@@ -299,7 +315,7 @@ with tab2:
     <div style="background-color: rgba(59, 130, 246, 0.15); border: 1px solid #3B82F6; border-radius: 10px; padding: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #60A5FA; cursor: pointer; list-style: none;">
-                🍂 Leaf Rust <i>(Puccinia triticina)</i> — [RESIKO SEDANG]
+                Leaf Rust <i>(Puccinia triticina)</i> - [RESIKO SEDANG]
             </summary>
             <hr style="border-color: rgba(59, 130, 246, 0.3);">
             <p style="color: #93C5FD;"><b>Deskripsi:</b> Karat daun klasik yang umum ditemui, memperlambat proses fotosintesis dan menurunkan kualitas butir gandum secara bertahap.</p>
@@ -313,7 +329,7 @@ with tab2:
 # TAB 3: PETUNJUK
 # ------------------------------------------
 with tab3:
-    st.header("ℹ️ Arsitektur Integrasi AWARE")
+    st.header("Arsitektur Integrasi AWARE")
     st.markdown("""
     Sistem ini memvalidasi ancaman biologis melalui empat matriks kecerdasan buatan:
     1. **Edge-Vision AI:** Klasifikasi patogen pada spesimen lokal (Gambar).
@@ -326,22 +342,22 @@ with tab3:
 # TAB 4: KEMITRAAN & KONTAK
 # ------------------------------------------
 with tab4:
-    st.header("🤝 Kemitraan Inovasi & Kolaborasi Riset")
-    st.markdown("Proyek **AWARE** bersifat arsitektur terbuka (*Open-Architecture*) dan menyambut baik inisiatif kerja sama dari institusi agrikultur, peneliti, maupun investor global.")
+    st.header("Kemitraan Inovasi & Kolaborasi Riset")
+    st.markdown("Proyek **AWARE** bersifat arsitektur terbuka (Open-Architecture) dan menyambut baik inisiatif kerja sama dari institusi agrikultur, peneliti, maupun investor global.")
     
     col_c1, col_c2 = st.columns(2)
     with col_c1:
-        st.subheader("👨‍🔬 Peneliti Utama")
+        st.subheader("Peneliti Utama")
         st.markdown("""
         **Jonatan**  
         *Undergraduate Researcher, Applied Mathematics*  
         **Universitas Sriwijaya (UNSRI)**, Indonesia.  
-        Fokus Riset: Integrasi *Machine Learning*, *Computer Vision*, & *System Dynamics* untuk ketahanan pangan.
+        Fokus Riset: Integrasi Machine Learning, Computer Vision, & System Dynamics untuk ketahanan pangan.
         
-        📧 Email: partnership@aware-unsri.edu.id (Mock)
+        Email: partnership@aware-unsri.edu.id (Mock)
         """)
     with col_c2:
-        st.subheader("🌐 Global Research Network")
+        st.subheader("Global Research Network")
         st.markdown("Kami mengkalibrasi model kami berdasarkan data terbuka dari institusi agrikultur dunia:")
         st.markdown("""
         - [CIMMYT (International Maize and Wheat Improvement Center)](https://www.cimmyt.org/)
