@@ -23,15 +23,12 @@ st.markdown("""
 <style>
     .main-header {font-size: 2.5rem; font-weight: 800; color: #1E3A8A; margin-bottom: 0;}
     .sub-header {font-size: 1.2rem; color: #4B5563; margin-bottom: 2rem;}
-    /* Desain tombol Prediksi agar menonjol */
     .stButton>button {background-color: #2563EB; color: white; border-radius: 8px; font-weight: bold;}
     .stButton>button:hover {background-color: #1D4ED8; border-color: #1D4ED8;}
-    /* Sembunyikan atribusi dan logo peta di kanan bawah */
     .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
-# Inisialisasi Session State untuk Prediksi AI ke-3
 if 'predicted_yield' not in st.session_state:
     st.session_state.predicted_yield = None
 
@@ -66,7 +63,6 @@ def load_all_models():
     ai1_path = 'downloaded_models/ai1_best_swin.pth'
     ai2_path = 'downloaded_models/ai2_best_stgat.pth'
     
-    # URL HF DIRECT ANDA
     url_ai1 = "URL_HUGGING_FACE_AI1" 
     url_ai2 = "URL_HUGGING_FACE_AI2"
     
@@ -108,16 +104,13 @@ with st.sidebar:
     st.markdown("**Didukung oleh:**\n- Swin Transformer V2\n- Spatio-Temporal GAT\n- CatBoost Regressor\n- Groq Llama-3.1")
 
 # ==========================================
-# KONTEN UTAMA (SISTEM TAB)
+# KONTEN UTAMA
 # ==========================================
 st.markdown('<p class="main-header">AWARE Dashboard</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">System of Integrated Artificial Intelligence for Geospatial Analytics on Wheat Epidemics</p>', unsafe_allow_html=True)
 
 tab1, tab2, tab3, tab4 = st.tabs(["Radar Scanner", "Ensiklopedia Penyakit", "Petunjuk Operasional", "Kemitraan Riset"])
 
-# ------------------------------------------
-# TAB 1: RADAR SCANNER
-# ------------------------------------------
 with tab1:
     col_left, col_right = st.columns([1.1, 1.1])
 
@@ -174,15 +167,16 @@ with tab1:
 
         st.metric(label="Risiko Penularan Regional", value=f"{lahan_target_risk * 100:.2f}%")
         
-        # PETA 3D INTERAKTIF (Lingkaran Bolong dan Provider Carto)
+        # PETA 3D INTERAKTIF (Zona Area Menyatu/Merged Blob)
         lat, lon = koordinat_wilayah[selected_region]
         
+        # Warna dengan transparansi (100) agar saat menumpuk menjadi efek heatmap yang organik
         if lahan_target_risk > 0.6:
-            map_color = [239, 68, 68, 255] 
+            map_color = [239, 68, 68, 100] 
         elif lahan_target_risk > 0.3:
-            map_color = [245, 158, 11, 255] 
+            map_color = [245, 158, 11, 100] 
         else:
-            map_color = [16, 185, 129, 255] 
+            map_color = [16, 185, 129, 100] 
             
         df_map = pd.DataFrame({"lat": np.random.randn(20) * 1.5 + lat, "lon": np.random.randn(20) * 1.5 + lon})
         
@@ -191,10 +185,9 @@ with tab1:
             data=df_map,
             get_position='[lon, lat]',
             get_radius=180000,
-            filled=False,
-            stroked=True,
-            get_line_color=map_color,
-            line_width_min_pixels=4,
+            filled=True,
+            stroked=False,
+            get_fill_color=map_color,
             pickable=True
         )
         view_state = pdk.ViewState(latitude=lat, longitude=lon, zoom=3.5, pitch=30)
@@ -242,36 +235,35 @@ with tab1:
         with st.expander("Nutrisi Makro & Mikro (Advanced)"):
             st.caption("Biarkan nilai default jika tidak ada data laboratorium.")
             c1, c2, c3, c4 = st.columns(4)
-            n_val = c1.number_input("N", value=105.1)
-            p_val = c2.number_input("P", value=77.8)
-            k_val = c3.number_input("K", value=128.9)
-            ca_val = c4.number_input("Ca", value=1021.0)
-            mg_val = c1.number_input("Mg", value=255.8)
-            s_val = c2.number_input("S", value=50.4)
-            zn_val = c3.number_input("Zn", value=5.0)
-            fe_val = c4.number_input("Fe", value=25.3)
-            cu_val = c1.number_input("Cu", value=2.5)
-            mn_val = c2.number_input("Mn", value=12.5)
-            b_val = c3.number_input("B", value=1.5)
-            mo_val = c4.number_input("Mo", value=0.5)
+            n_val = c1.number_input("Nitrogen (N)", value=105.1)
+            p_val = c2.number_input("Phosphorus (P)", value=77.8)
+            k_val = c3.number_input("Potassium (K)", value=128.9)
+            ca_val = c4.number_input("Calcium (Ca)", value=1021.0)
+            mg_val = c1.number_input("Magnesium (Mg)", value=255.8)
+            s_val = c2.number_input("Sulfur (S)", value=50.4)
+            zn_val = c3.number_input("Zinc (Zn)", value=5.0)
+            fe_val = c4.number_input("Iron (Fe)", value=25.3)
+            cu_val = c1.number_input("Copper (Cu)", value=2.5)
+            mn_val = c2.number_input("Manganese (Mn)", value=12.5)
+            b_val = c3.number_input("Boron (B)", value=1.5)
+            mo_val = c4.number_input("Molybdenum (Mo)", value=0.5)
 
         with st.expander("Indikator Sensor & Fisik Tanah (Advanced)"):
             c1, c2, c3, c4 = st.columns(4)
-            ec = c1.number_input("EC", value=1.3)
-            oc = c2.number_input("OC", value=1.05)
-            cec = c3.number_input("CEC", value=27.6)
-            bulk_dens = c4.number_input("Bulk Dens.", value=1.4)
-            sand = c1.number_input("Sand (%)", value=49.8)
-            silt = c2.number_input("Silt (%)", value=32.3)
-            clay = c3.number_input("Clay (%)", value=22.6)
-            whc = c4.number_input("Water Hold.", value=24.9)
-            ndvi = c1.number_input("NDVI", value=0.7)
-            evi = c2.number_input("EVI", value=0.0)
-            lai = c3.number_input("LAI", value=3.0)
+            ec = c1.number_input("Electrical Cond. (EC)", value=1.3)
+            oc = c2.number_input("Organic Carbon (OC)", value=1.05)
+            cec = c3.number_input("Cation Exchange (CEC)", value=27.6)
+            bulk_dens = c4.number_input("Bulk Density", value=1.4)
+            sand = c1.number_input("Pasir / Sand (%)", value=49.8)
+            silt = c2.number_input("Debu / Silt (%)", value=32.3)
+            clay = c3.number_input("Liat / Clay (%)", value=22.6)
+            whc = c4.number_input("Water Holding Cap.", value=24.9)
+            ndvi = c1.number_input("Vegetation Idx (NDVI)", value=0.7)
+            evi = c2.number_input("Enhanced Veg Idx (EVI)", value=0.0)
+            lai = c3.number_input("Leaf Area Idx (LAI)", value=3.0)
             chloro = c4.number_input("Chlorophyll", value=30.0)
-            aspect = c1.number_input("Aspect", value=181.1)
+            aspect = c1.number_input("Aspect (Topografi)", value=181.1)
 
-        # Tombol Prediksi Interaktif
         if st.button("Prediksi Tonase Panen", use_container_width=True):
             input_data = {
                 'Temperature': [temp_input], 'Humidity': [humidity], 'Rainfall': [rainfall_input],
@@ -328,9 +320,6 @@ with tab1:
                 except Exception as e:
                     st.error(f"Kegagalan Komunikasi Server: {str(e)}")
 
-# ------------------------------------------
-# TAB 2: ENSIKLOPEDIA KUSTOM
-# ------------------------------------------
 with tab2:
     st.header("Ensiklopedia Patogen Gandum")
     st.write("Klasifikasi patologi dan protokol penanganan ancaman ekologis.")
@@ -373,9 +362,6 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
 
-# ------------------------------------------
-# TAB 3: PETUNJUK
-# ------------------------------------------
 with tab3:
     st.header("Arsitektur Integrasi Sistem AWARE")
     st.markdown("""
@@ -386,9 +372,6 @@ with tab3:
     4. **Generative NLP:** Sintesis metrik teknis menjadi protokol instruksional strategis.
     """)
 
-# ------------------------------------------
-# TAB 4: KEMITRAAN & KONTAK
-# ------------------------------------------
 with tab4:
     st.header("Jaringan Kemitraan Inovasi & Riset Global")
     st.markdown("Arsitektur proyek **AWARE** didesain dengan protokol *Open-Architecture* untuk memfasilitasi integrasi riset bersama institusi agrikultur dan pemangku kebijakan ketahanan pangan internasional.")
