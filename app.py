@@ -361,24 +361,24 @@ with tab2:
         </details>
     </div>
     
-    <div style="background-color: rgba(255, 255, 0, 0.15); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+    <div style="background-color: rgba(245, 158, 11, 0.3); border: 1px solid #F59E0B; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #FBBF24; cursor: pointer; list-style: none;">
                 Stem Rust (Puccinia graminis) - [HIGH RISK]
             </summary>
-            <hr style="border-color: rgba(255, 255, 0, 0.3);">
+            <hr style="border-color: rgba(245, 158, 11, 0.15);">
             <p style="color: #FCD34D;"><b>Pathology:</b> Destruction of stem vessels that disrupts nutrient supply and structural integrity, triggering mass pre-harvest lodging phenomena.</p>
             <p style="color: #FCD34D;"><b>Visual Identification:</b> Linear epidermal ruptures forming brick-red diamond-shaped pustules that emit rusty aerosol spores upon mechanical vibration.</p>
             <p style="color: #FCD34D;"><b>Mitigation Protocol:</b> Eradication of secondary host weeds (barberry) and scheduling of broad-spectrum protectant spraying according to the rainfall cycle.</p>
         </details>
     </div>
     
-    <div style="background-color: rgba(59, 130, 246, 0.15); border: 1px solid #3B82F6; border-radius: 10px; padding: 15px;">
+    <div style="background-color: rgba(255, 255, 0, 0.15); border: 1px solid #3B82F6; border-radius: 10px; padding: 15px;">
         <details>
             <summary style="font-weight: bold; font-size: 1.2rem; color: #60A5FA; cursor: pointer; list-style: none;">
                 Leaf Rust (Puccinia triticina) - [MODERATE RISK]
             </summary>
-            <hr style="border-color: rgba(59, 130, 246, 0.3);">
+            <hr style="border-color: rgba(255, 255, 0, 0.3);">
             <p style="color: #93C5FD;"><b>Pathology:</b> Classic leaf rust that chronically degrades cells, inhibiting the photosynthetic rate, depreciating starch accumulation, and reducing harvest mass specifications.</p>
             <p style="color: #93C5FD;"><b>Visual Identification:</b> Asymmetrical distribution of spherical bright orange pustules, exclusively concentrated on the upper strata leaf surfaces.</p>
             <p style="color: #93C5FD;"><b>Mitigation Protocol:</b> Gradual genetic intervention through planting transition toward rust-resistant cultivars for subsequent agricultural cycles.</p>
