@@ -123,7 +123,7 @@ with st.sidebar:
     # Render the UNSRI Logo using centered HTML
     st.markdown("""
     <div style="display: flex; justify-content: center;">
-    st.image("https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png", use_column_width=True)
+        <img src=""https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png" width="160">
     </div>
     """, unsafe_allow_html=True)
 
