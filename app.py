@@ -101,7 +101,7 @@ with st.sidebar:
     # AWARE Logo Placeholder (Currently UNSRI Logo)
     st.markdown("""
     <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png">
+        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png" width="120">
     </div>
     """, unsafe_allow_html=True)
     
@@ -121,16 +121,6 @@ with st.sidebar:
     <div style="background-color: #FEF2F2; padding: 15px; border-radius: 8px; border-left: 5px solid #DC2626; margin-bottom: 20px;">
         <p style="font-weight: 700; font-size: 0.85rem; color: #B91C1C; margin-bottom: 5px; text-transform: uppercase;">AGRICULTURAL DISCLAIMER</p>
         <p style="font-size: 0.9rem; color: #991B1B; margin-bottom: 0;">This system is not a substitute for a certified agronomist. It serves only as a reference and initial detection tool. If in doubt, always consult the nearest agricultural authority.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    <hr style="margin: 20px 0; border-color: #E5E7EB;">
-    <p style="text-align: center; font-size: 0.9rem; color: #6B7280; margin-bottom: 15px;">Developed by students of:</p>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style="display: flex; justify-content: center;">
-        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png">
     </div>
     """, unsafe_allow_html=True)
 
