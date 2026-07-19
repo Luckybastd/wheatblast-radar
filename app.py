@@ -101,7 +101,7 @@ with st.sidebar:
     # AWARE Logo Placeholder (Currently UNSRI Logo)
     st.markdown("""
     <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png" width="120">
+        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png">
     </div>
     """, unsafe_allow_html=True)
     
@@ -129,7 +129,7 @@ with st.sidebar:
     
     st.markdown("""
     <div style="display: flex; justify-content: center;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Lambang_Universitas_Sriwijaya.svg/500px-Lambang_Universitas_Sriwijaya.svg.png" width="160">
+        <img src="https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png">
     </div>
     """, unsafe_allow_html=True)
 
