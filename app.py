@@ -157,7 +157,7 @@ with tab1:
         
         if uploaded_file is not None:
             image = Image.open(uploaded_file).convert('RGB')
-            st.image(image, caption="Specimen Analyzed", use_container_width=True)
+            st.image(image, caption="Specimen Analyzed", width="stretch")
             
             transform_eval = transforms.Compose([
                 transforms.Resize((256, 256)),
