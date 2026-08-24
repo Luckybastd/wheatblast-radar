@@ -342,7 +342,7 @@ with tab1:
                     client = Groq(api_key=st.secrets["GROQ_API_KEY"])
                     with st.spinner("Processing synthesis analytics..."):
                         report_text = client.chat.completions.create(
-                            messages=[{"role": "user", "content": prompt_llm}], model="llama-3.1-8b-instant", temperature=0.3
+                            messages=[{"role": "user", "content": prompt_llm}], model="qwen/qwen3.6-27b", temperature=0.3
                         ).choices[0].message.content
                     st.info(report_text)
                 except Exception as e:
