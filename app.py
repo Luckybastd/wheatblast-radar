@@ -341,10 +341,18 @@ with tab1:
                 try:
                     client = Groq(api_key=st.secrets["GROQ_API_KEY"])
                     with st.spinner("Processing synthesis analytics..."):
-                        report_text = client.chat.completions.create(
-                            messages=[{"role": "user", "content": prompt_llm}], model="qwen/qwen3.6-27b", temperature=0.3
+                        raw_report = client.chat.completions.create(
+                            messages=[{"role": "user", "content": prompt_llm}], 
+                            model="qwen/qwen3.6-27b", 
+                            temperature=0.3
                         ).choices[0].message.content
-                    st.info(report_text)
+                        
+                        if "</think>" in raw_report:
+                            clean_report = raw_report.split("</think>")[-1].strip()
+                        else:
+                            clean_report = raw_report.strip()
+                            
+                    st.info(clean_report)
                 except Exception as e:
                     st.error(f"Server Communication Failure: {str(e)}")
 
